@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <string>
 #include <vector>
 
 #include "../common/source_location.hpp"
@@ -15,52 +14,49 @@ enum class ASTNodeType
 
     Import,
 
-    Core,
-
-    Variable,
     Constant,
+    Variable,
 
     Function,
     Return,
-
-    Frame,
-    Method,
 
     If,
     Flow,
     During,
 
-    Call,
+    CallExpression,
 
     BinaryExpression,
-    UnaryExpression,
 
     Identifier,
+
     NumberLiteral,
-    StringLiteral
+    StringLiteral,
+
+    BooleanLiteral,
+
+    NullLiteral
 };
 
 class ASTNode
 {
 public:
     ASTNode(
-        ASTNodeType nodeType,
+        ASTNodeType type,
         SourceLocation location
     )
-        : m_type(nodeType),
+        : m_type(type),
           m_location(location)
     {
     }
 
     virtual ~ASTNode() = default;
 
-    [[nodiscard]]
     ASTNodeType type() const
     {
         return m_type;
     }
 
-    [[nodiscard]]
     SourceLocation location() const
     {
         return m_location;
@@ -68,9 +64,28 @@ public:
 
 private:
     ASTNodeType m_type;
+
     SourceLocation m_location;
 };
 
-using ASTNodePtr = std::unique_ptr<ASTNode>;
+using ASTNodePtr =
+    std::unique_ptr<ASTNode>;
+
+class ProgramNode final
+    : public ASTNode
+{
+public:
+    ProgramNode()
+        : ASTNode(
+            ASTNodeType::Program,
+            {}
+        )
+    {
+    }
+
+    std::vector<
+        ASTNodePtr
+    > declarations;
+};
 
 }
