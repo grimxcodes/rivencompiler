@@ -1,14 +1,15 @@
 #include "../../include/lexer/lexer.hpp"
 
 #include <cctype>
-#include <unordered_map>
 
 #include "../../include/common/error.hpp"
 
 namespace riven
 {
 
-Lexer::Lexer(const std::string& source)
+Lexer::Lexer(
+    const std::string& source
+)
     : m_source(source)
 {
 }
@@ -31,24 +32,30 @@ std::vector<Token> Lexer::tokenize()
             m_column
         );
 
-        char current = peek();
+        char c = peek();
 
-        if (std::isalpha(current) || current == '_')
+        if (std::isalpha(c) || c == '_')
         {
-            tokens.push_back(identifier());
+            tokens.push_back(
+                identifier()
+            );
             continue;
         }
 
-        if (std::isdigit(current))
+        if (std::isdigit(c))
         {
-            tokens.push_back(number());
+            tokens.push_back(
+                number()
+            );
             continue;
         }
 
-        switch (current)
+        switch (c)
         {
             case '"':
-                tokens.push_back(string());
+                tokens.push_back(
+                    string()
+                );
                 break;
 
             case '(':
@@ -114,15 +121,6 @@ std::vector<Token> Lexer::tokenize()
                 );
                 break;
 
-            case '.':
-                advance();
-                tokens.emplace_back(
-                    TokenType::Dot,
-                    ".",
-                    location
-                );
-                break;
-
             case ';':
                 advance();
                 tokens.emplace_back(
@@ -132,112 +130,16 @@ std::vector<Token> Lexer::tokenize()
                 );
                 break;
 
-            case '=':
-            {
+            case '.':
                 advance();
-
-                if (peek() == '=')
-                {
-                    advance();
-
-                    tokens.emplace_back(
-                        TokenType::Equal,
-                        "==",
-                        location
-                    );
-                }
-                else
-                {
-                    tokens.emplace_back(
-                        TokenType::Assign,
-                        "=",
-                        location
-                    );
-                }
-
+                tokens.emplace_back(
+                    TokenType::Dot,
+                    ".",
+                    location
+                );
                 break;
-            }
-
-            case '!':
-            {
-                advance();
-
-                if (peek() == '=')
-                {
-                    advance();
-
-                    tokens.emplace_back(
-                        TokenType::NotEqual,
-                        "!=",
-                        location
-                    );
-                }
-                else
-                {
-                    tokens.emplace_back(
-                        TokenType::Not,
-                        "!",
-                        location
-                    );
-                }
-
-                break;
-            }
-
-            case '>':
-            {
-                advance();
-
-                if (peek() == '=')
-                {
-                    advance();
-
-                    tokens.emplace_back(
-                        TokenType::GreaterEqual,
-                        ">=",
-                        location
-                    );
-                }
-                else
-                {
-                    tokens.emplace_back(
-                        TokenType::Greater,
-                        ">",
-                        location
-                    );
-                }
-
-                break;
-            }
-
-            case '<':
-            {
-                advance();
-
-                if (peek() == '=')
-                {
-                    advance();
-
-                    tokens.emplace_back(
-                        TokenType::LessEqual,
-                        "<=",
-                        location
-                    );
-                }
-                else
-                {
-                    tokens.emplace_back(
-                        TokenType::Less,
-                        "<",
-                        location
-                    );
-                }
-
-                break;
-            }
 
             case '+':
-            {
                 advance();
 
                 if (peek() == '>')
@@ -260,10 +162,8 @@ std::vector<Token> Lexer::tokenize()
                 }
 
                 break;
-            }
 
             case '-':
-            {
                 advance();
 
                 if (peek() == '<')
@@ -286,10 +186,10 @@ std::vector<Token> Lexer::tokenize()
                 }
 
                 break;
-            }
 
             case '*':
                 advance();
+
                 tokens.emplace_back(
                     TokenType::Star,
                     "*",
@@ -299,6 +199,7 @@ std::vector<Token> Lexer::tokenize()
 
             case '/':
                 advance();
+
                 tokens.emplace_back(
                     TokenType::Slash,
                     "/",
@@ -306,10 +207,105 @@ std::vector<Token> Lexer::tokenize()
                 );
                 break;
 
+            case '=':
+                advance();
+
+                if (peek() == '=')
+                {
+                    advance();
+
+                    tokens.emplace_back(
+                        TokenType::Equal,
+                        "==",
+                        location
+                    );
+                }
+                else
+                {
+                    tokens.emplace_back(
+                        TokenType::Assign,
+                        "=",
+                        location
+                    );
+                }
+
+                break;
+
+            case '!':
+                advance();
+
+                if (peek() == '=')
+                {
+                    advance();
+
+                    tokens.emplace_back(
+                        TokenType::NotEqual,
+                        "!=",
+                        location
+                    );
+                }
+                else
+                {
+                    tokens.emplace_back(
+                        TokenType::Not,
+                        "!",
+                        location
+                    );
+                }
+
+                break;
+
+            case '>':
+                advance();
+
+                if (peek() == '=')
+                {
+                    advance();
+
+                    tokens.emplace_back(
+                        TokenType::GreaterEqual,
+                        ">=",
+                        location
+                    );
+                }
+                else
+                {
+                    tokens.emplace_back(
+                        TokenType::Greater,
+                        ">",
+                        location
+                    );
+                }
+
+                break;
+
+            case '<':
+                advance();
+
+                if (peek() == '=')
+                {
+                    advance();
+
+                    tokens.emplace_back(
+                        TokenType::LessEqual,
+                        "<=",
+                        location
+                    );
+                }
+                else
+                {
+                    tokens.emplace_back(
+                        TokenType::Less,
+                        "<",
+                        location
+                    );
+                }
+
+                break;
+
             default:
                 throw LexerError(
-                    "Unknown character: " +
-                    std::string(1, current),
+                    "Unknown character",
                     location
                 );
         }
@@ -329,7 +325,8 @@ std::vector<Token> Lexer::tokenize()
 
 bool Lexer::isAtEnd() const
 {
-    return m_position >= m_source.size();
+    return m_position >=
+           m_source.size();
 }
 
 char Lexer::peek() const
@@ -344,114 +341,53 @@ char Lexer::peek() const
 
 char Lexer::peekNext() const
 {
-    if (m_position + 1 >= m_source.size())
+    if (m_position + 1 >=
+        m_source.size())
     {
         return '\0';
     }
 
-    return m_source[m_position + 1];
+    return m_source[
+        m_position + 1
+    ];
 }
 
 char Lexer::advance()
 {
-    char current = m_source[m_position++];
+    char c =
+        m_source[m_position++];
 
-    if (current == '\n')
-    {
-        ++m_line;
-        m_column = 1;
-    }
-    else
-    {
-        ++m_column;
-    }
+    ++m_column;
 
-    return current;
+    return c;
 }
 
 void Lexer::skipWhitespace()
 {
     while (!isAtEnd())
     {
-        char current = peek();
+        char c = peek();
 
-        if (current == ' ' ||
-            current == '\t' ||
-            current == '\r' ||
-            current == '\n')
+        if (c == '\n')
+        {
+            ++m_line;
+
+            m_column = 1;
+
+            advance();
+
+            continue;
+        }
+
+        if (std::isspace(c))
         {
             advance();
+
+            continue;
         }
-        else
-        {
-            break;
-        }
+
+        break;
     }
-}
-
-Token Lexer::identifier()
-{
-    SourceLocation location(
-        m_line,
-        m_column
-    );
-
-    std::string text;
-
-    while (!isAtEnd())
-    {
-        char current = peek();
-
-        if (std::isalnum(current) ||
-            current == '_')
-        {
-            text += advance();
-        }
-        else
-        {
-            break;
-        }
-    }
-
-    return Token(
-        keywordType(text),
-        text,
-        location
-    );
-}
-
-Token Lexer::number()
-{
-    SourceLocation location(
-        m_line,
-        m_column
-    );
-
-    std::string text;
-
-    while (!isAtEnd() &&
-           std::isdigit(peek()))
-    {
-        text += advance();
-    }
-
-    if (!isAtEnd() &&
-        peek() == '.')
-    {
-        text += advance();
-
-        while (!isAtEnd() &&
-               std::isdigit(peek()))
-        {
-            text += advance();
-        }
-    }
-
-    return Token(
-        TokenType::Number,
-        text,
-        location
-    );
 }
 
 Token Lexer::string()
@@ -463,12 +399,14 @@ Token Lexer::string()
 
     advance();
 
-    std::string text;
+    std::string value;
 
     while (!isAtEnd() &&
            peek() != '"')
     {
-        text += advance();
+        value.push_back(
+            advance()
+        );
     }
 
     if (isAtEnd())
@@ -481,8 +419,71 @@ Token Lexer::string()
 
     advance();
 
-    return Token(
+    return makeToken(
         TokenType::String,
+        value,
+        location
+    );
+}
+
+Token Lexer::number()
+{
+    SourceLocation location(
+        m_line,
+        m_column
+    );
+
+    std::string value;
+
+    while (std::isdigit(peek()))
+    {
+        value.push_back(
+            advance()
+        );
+    }
+
+    if (peek() == '.')
+    {
+        value.push_back(
+            advance()
+        );
+
+        while (std::isdigit(peek()))
+        {
+            value.push_back(
+                advance()
+            );
+        }
+    }
+
+    return makeToken(
+        TokenType::Number,
+        value,
+        location
+    );
+}
+
+Token Lexer::identifier()
+{
+    SourceLocation location(
+        m_line,
+        m_column
+    );
+
+    std::string text;
+
+    while (
+        std::isalnum(peek()) ||
+        peek() == '_'
+    )
+    {
+        text.push_back(
+            advance()
+        );
+    }
+
+    return makeToken(
+        keywordType(text),
         text,
         location
     );
@@ -510,63 +511,45 @@ TokenType Lexer::keywordType(
         TokenType
     > keywords =
     {
-        {"riven", TokenType::Riven},
-        {"core", TokenType::Core},
+        {"riven",TokenType::Riven},
+        {"core",TokenType::Core},
 
-        {"consistof", TokenType::ConsistOf},
+        {"consistof",TokenType::ConsistOf},
 
-        {"firm", TokenType::Firm},
+        {"firm",TokenType::Firm},
 
-        {"craft", TokenType::Craft},
-        {"returns", TokenType::Returns},
+        {"craft",TokenType::Craft},
+        {"returns",TokenType::Returns},
 
-        {"frame", TokenType::Frame},
-        {"boot", TokenType::Boot},
+        {"if",TokenType::If},
+        {"altif",TokenType::AltIf},
+        {"else",TokenType::Else},
 
-        {"open", TokenType::Open},
-        {"hidden", TokenType::Hidden},
+        {"flow",TokenType::Flow},
+        {"during",TokenType::During},
 
-        {"if", TokenType::If},
-        {"altif", TokenType::AltIf},
-        {"else", TokenType::Else},
+        {"imprint",TokenType::Imprint},
+        {"scanq",TokenType::Scanq},
 
-        {"flow", TokenType::Flow},
-        {"during", TokenType::During},
+        {"correct",TokenType::Correct},
+        {"incorrect",TokenType::Incorrect},
 
-        {"spark", TokenType::Spark},
-        {"sync", TokenType::Sync},
+        {"emp",TokenType::Emp},
 
-        {"ref", TokenType::Ref},
-        {"ptr", TokenType::Ptr},
+        {"and",TokenType::And},
+        {"or",TokenType::Or},
+        {"not",TokenType::Not},
 
-        {"raw", TokenType::Raw},
-
-        {"rise", TokenType::Rise},
-        {"drop", TokenType::Drop},
-
-        {"imprint", TokenType::Imprint},
-        {"scanq", TokenType::Scanq},
-
-        {"fetch", TokenType::Fetch},
-
-        {"attack", TokenType::Attack},
-        {"resc", TokenType::Resc},
-
-        {"correct", TokenType::Correct},
-        {"incorrect", TokenType::Incorrect},
-
-        {"emp", TokenType::Emp},
-
-        {"and", TokenType::And},
-        {"or", TokenType::Or},
-        {"not", TokenType::Not}
+        {"rise",TokenType::Rise},
+        {"drop",TokenType::Drop}
     };
 
-    auto iterator = keywords.find(text);
+    auto it =
+        keywords.find(text);
 
-    if (iterator != keywords.end())
+    if (it != keywords.end())
     {
-        return iterator->second;
+        return it->second;
     }
 
     return TokenType::Identifier;
