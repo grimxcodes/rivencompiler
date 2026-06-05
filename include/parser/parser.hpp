@@ -1,10 +1,15 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include "../common/token.hpp"
-#include "../ast/statements.hpp"
+
+#include "../ast/ast_node.hpp"
 #include "../ast/expressions.hpp"
+#include "../ast/statements.hpp"
+#include "../ast/declarations.hpp"
+#include "../ast/control_flow.hpp"
 
 namespace riven
 {
@@ -51,6 +56,21 @@ private:
     ASTNodePtr parseImport();
 
     ASTNodePtr parseCore();
+
+    ASTNodePtr parseFirm();
+
+    ASTNodePtr parseFunction();
+
+    ASTNodePtr parseIf();
+
+    ASTNodePtr parseFlow();
+
+    ASTNodePtr parseDuring();
+
+private:
+    ASTNodePtr expression();
+
+    ASTNodePtr primary();
 };
 
 }
