@@ -11,7 +11,9 @@ namespace riven
 struct Token
 {
     TokenType type;
+
     std::string lexeme;
+
     SourceLocation location;
 
     Token(
