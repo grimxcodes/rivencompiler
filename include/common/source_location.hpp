@@ -18,6 +18,21 @@ struct SourceLocation
           column(columnNumber)
     {
     }
+
+    constexpr bool operator==(
+        const SourceLocation& other
+    ) const
+    {
+        return line == other.line &&
+               column == other.column;
+    }
+
+    constexpr bool operator!=(
+        const SourceLocation& other
+    ) const
+    {
+        return !(*this == other);
+    }
 };
 
 }
