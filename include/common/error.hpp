@@ -8,7 +8,8 @@
 namespace riven
 {
 
-class CompilerError : public std::runtime_error
+class CompilerError
+    : public std::runtime_error
 {
 public:
     CompilerError(
@@ -30,38 +31,50 @@ private:
     SourceLocation m_location;
 };
 
-class LexerError : public CompilerError
+class LexerError
+    : public CompilerError
 {
 public:
     LexerError(
         const std::string& message,
         SourceLocation location
     )
-        : CompilerError(message, location)
+        : CompilerError(
+            message,
+            location
+        )
     {
     }
 };
 
-class ParserError : public CompilerError
+class ParserError
+    : public CompilerError
 {
 public:
     ParserError(
         const std::string& message,
         SourceLocation location
     )
-        : CompilerError(message, location)
+        : CompilerError(
+            message,
+            location
+        )
     {
     }
 };
 
-class SemanticError : public CompilerError
+class SemanticError
+    : public CompilerError
 {
 public:
     SemanticError(
         const std::string& message,
         SourceLocation location
     )
-        : CompilerError(message, location)
+        : CompilerError(
+            message,
+            location
+        )
     {
     }
 };
