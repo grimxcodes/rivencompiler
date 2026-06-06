@@ -105,13 +105,11 @@ class FunctionNode final
 public:
     std::string name;
 
-    std::vector<
-        std::string
-    > parameters;
+    std::vector<std::string>
+        parameters;
 
-    std::vector<
-        ASTNodePtr
-    > body;
+    std::vector<ASTNodePtr>
+        body;
 
     FunctionNode(
         const std::string& functionName,
@@ -122,6 +120,24 @@ public:
             location
         ),
           name(functionName)
+    {
+    }
+};
+
+class EntryPointNode final
+    : public StatementNode
+{
+public:
+    std::vector<ASTNodePtr>
+        body;
+
+    EntryPointNode(
+        SourceLocation location
+    )
+        : StatementNode(
+            ASTNodeType::EntryPoint,
+            location
+        )
     {
     }
 };
