@@ -12,6 +12,8 @@ enum class ASTNodeType
 {
     Program,
 
+    EntryPoint,
+
     Import,
 
     Constant,
@@ -83,9 +85,8 @@ public:
     {
     }
 
-    std::vector<
-        ASTNodePtr
-    > declarations;
+    std::vector<ASTNodePtr>
+        declarations;
 };
 
 }
