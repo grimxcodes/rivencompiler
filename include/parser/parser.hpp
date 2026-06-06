@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <vector>
 
 #include "../common/token.hpp"
@@ -21,7 +20,8 @@ public:
         const std::vector<Token>& tokens
     );
 
-    std::unique_ptr<ProgramNode> parse();
+    std::unique_ptr<ProgramNode>
+    parse();
 
 private:
     const std::vector<Token>& m_tokens;
@@ -53,13 +53,18 @@ private:
 private:
     ASTNodePtr declaration();
 
+    ASTNodePtr statement();
+
+private:
     ASTNodePtr parseImport();
 
-    ASTNodePtr parseCore();
+    ASTNodePtr parseConstant();
 
-    ASTNodePtr parseFirm();
+    ASTNodePtr parseVariable();
 
     ASTNodePtr parseFunction();
+
+    ASTNodePtr parseReturn();
 
     ASTNodePtr parseIf();
 
@@ -70,7 +75,20 @@ private:
 private:
     ASTNodePtr expression();
 
+    ASTNodePtr equality();
+
+    ASTNodePtr comparison();
+
+    ASTNodePtr term();
+
+    ASTNodePtr factor();
+
     ASTNodePtr primary();
+
+private:
+    ASTNodePtr parseCall(
+        const Token& identifier
+    );
 };
 
 }
