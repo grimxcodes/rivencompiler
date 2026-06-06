@@ -3,10 +3,33 @@
 #include "statements.hpp"
 #include "expressions.hpp"
 
+#include <string>
+#include <vector>
+
 namespace riven
 {
 
-class ConstantNode final : public StatementNode
+class ImportNode final
+    : public StatementNode
+{
+public:
+    std::string path;
+
+    ImportNode(
+        const std::string& filePath,
+        SourceLocation location
+    )
+        : StatementNode(
+            ASTNodeType::Import,
+            location
+        ),
+          path(filePath)
+    {
+    }
+};
+
+class ConstantNode final
+    : public StatementNode
 {
 public:
     std::string name;
@@ -19,16 +42,19 @@ public:
         SourceLocation location
     )
         : StatementNode(
-              ASTNodeType::Constant,
-              location
-          ),
+            ASTNodeType::Constant,
+            location
+        ),
           name(constantName),
-          value(std::move(constantValue))
+          value(std::move(
+              constantValue
+          ))
     {
     }
 };
 
-class VariableNode final : public StatementNode
+class VariableNode final
+    : public StatementNode
 {
 public:
     std::string name;
@@ -41,16 +67,19 @@ public:
         SourceLocation location
     )
         : StatementNode(
-              ASTNodeType::Variable,
-              location
-          ),
+            ASTNodeType::Variable,
+            location
+        ),
           name(variableName),
-          value(std::move(variableValue))
+          value(std::move(
+              variableValue
+          ))
     {
     }
 };
 
-class ReturnNode final : public StatementNode
+class ReturnNode final
+    : public StatementNode
 {
 public:
     ASTNodePtr value;
@@ -60,31 +89,38 @@ public:
         SourceLocation location
     )
         : StatementNode(
-              ASTNodeType::Return,
-              location
-          ),
-          value(std::move(returnValue))
+            ASTNodeType::Return,
+            location
+        ),
+          value(std::move(
+              returnValue
+          ))
     {
     }
 };
 
-class FunctionNode final : public StatementNode
+class FunctionNode final
+    : public StatementNode
 {
 public:
     std::string name;
 
-    std::vector<std::string> parameters;
+    std::vector<
+        std::string
+    > parameters;
 
-    std::vector<ASTNodePtr> body;
+    std::vector<
+        ASTNodePtr
+    > body;
 
     FunctionNode(
         const std::string& functionName,
         SourceLocation location
     )
         : StatementNode(
-              ASTNodeType::Function,
-              location
-          ),
+            ASTNodeType::Function,
+            location
+        ),
           name(functionName)
     {
     }
